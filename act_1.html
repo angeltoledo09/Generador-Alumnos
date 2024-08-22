@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Script SQL</title>
+</head>
+
+<script>
+    const apellidosFranceses = [
+    "Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann",
+    "Schäfer", "Koch", "Bauer", "Richter", "Klein", "Wolf", "Schröder", "Neumann", "Schwarz", "Zimmermann",
+    "Braun", "Krüger", "Hofmann", "Hartmann", "Lange", "Schmitt", "Werner", "Krause", "Meier", "Lehmann",
+    "Schmid", "Schulze", "Maier", "Köhler", "Herrmann", "König", "Walter", "Mayer", "Huber", "Kaiser",
+    "Fuchs", "Peters", "Lang", "Scholz", "Möller", "Weiß", "Jung", "Hahn", "Schubert", "Vogel",
+    "Friedrich", "Keller", "Günther", "Frank", "Berger", "Winkler", "Roth", "Beck", "Lorenz", "Baumann",
+    "Fröhlich", "Böhm", "Schulte", "Graf", "Stein", "Jäger", "Seidel", "Pfeiffer", "Ludwig", "Kuhn",
+    "Pohl", "Ziegler", "Martin", "Vogel", "Arnold", "Engel", "Böhler", "Fritsch", "Otto", "Schilling",
+    "Jakob", "Kraft", "Ackermann", "Busch", "Buschmann", "Albrecht", "Barth", "Dreyer", "Bender", "Eichhorn",
+    "Ebert", "Riedel", "Knoll", "Kremer", "Engelhardt", "Kühn", "Urban", "Dietz", "Schütz", "Heilmann"
+    ];
+
+    const apellidosJaponeses = [
+    "García", "Fernández", "González", "Rodríguez", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín",
+    "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez",
+    "Navarro", "Torres", "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Molina",
+    "Morales", "Suárez", "Ortega", "Delgado", "Castro", "Ortiz", "Rubio", "Marín", "Sanz", "Iglesias",
+    "Nuñez", "Medina", "Garrido", "Santos", "Castillo", "Cortés", "Lozano", "Guerrero", "Cano", "Prieto",
+    "Méndez", "Calvo", "Cruz", "Gallego", "Vidal", "León", "Herrera", "Marquez", "Peña", "Flores",
+    "Cabrera", "Campos", "Vega", "Fuentes", "Carrasco", "Diez", "Caballero", "Reyes", "Nieto", "Aguilar",
+    "Pascual", "Santana", "Herrero", "Lorenzo", "Montero", "Hidalgo", "Giménez", "Ibáñez", "Ferrer", "Durán",
+    "Santiago", "Benítez", "Ferrer", "Arias", "Mora", "Vicente", "Vargas", "Carmona", "Crespo", "Román",
+    "Pastor", "Soto", "Saez", "Velasco", "Moya", "Soler", "Parra", "Esteban", "Bravo", "Gallardo"
+    ];
+
+    const nombresMexicanos = [
+    "Juan Carlos", "María José", "José Luis", "Ana María", "Luis Miguel", "María del Carmen", "Carlos Alberto", "María Teresa", "José Antonio", "María Isabel",
+    "Juan Manuel", "María Elena", "Francisco Javier", "María Dolores", "Jesús María", "María Lourdes", "Juan José", "María Fernanda", "José Manuel", "María Eugenia",
+    "Miguel Ángel", "María Victoria", "Pedro Antonio", "María Antonia", "Juan Francisco", "María Soledad", "Antonio José", "María Cristina", "José María", "María Mercedes",
+    "Ángel Luis", "María del Rosario", "Juan Antonio", "María Concepción", "Manuel Alejandro", "María Esperanza", "Rafael Ángel", "María Consuelo", "Luis Fernando", "María de los Ángeles",
+    "Juan Ramón", "María del Pilar", "Pablo Andrés", "María de la Luz", "Carlos Enrique", "María de la Paz", "José Francisco", "María de Jesús", "Pedro Luis", "María de Lourdes",
+    "Francisco José", "María Estrella", "Ricardo Andrés", "María Auxiliadora", "José Carlos", "María Amparo", "Miguel Francisco", "María Dolores", "Juan Andrés", "María Isabel",
+    "José Alberto", "María Clara", "Jesús Antonio", "María Gracia", "José Luis", "María Teresa", "Juan Miguel", "María del Mar", "Pedro Jesús", "María Belén",
+    "Carlos Eduardo", "María Guadalupe", "José David", "María de la Cruz", "Luis Eduardo", "María del Rocío", "Juan David", "María Lucía", "Francisco Javier", "María Teresa",
+    "Carlos Francisco", "María José", "Miguel Ángel", "María del Carmen", "José Ricardo", "María del Rosario", "Luis Antonio", "María Lourdes", "Juan Pablo", "María de los Remedios",
+    "José Antonio", "María Asunción", "Juan Luis", "María del Pilar", "Carlos Alberto", "María de Fátima", "Miguel Eduardo", "María del Consuelo", "Pedro Francisco", "María de las Mercedes"
+    ];
+
+
+
+    function guardar() {
+        var contenidoSQL = document.getElementById("resultado").innerHTML; // Obtener el contenido SQL generado
+        contenidoSQL = contenidoSQL.replace(/<br\s*\/?>/gi, '\n'); // Reemplazar <br> con \n
+        var nombreArchivo = "script_sql"; // Nombre del archivo sin la extensión .sql
+        var blob = new Blob([contenidoSQL], { type: 'text/sql' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = nombreArchivo + '.sql'; 
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+    
+
+    function generar() {
+    var valoresSQL = [];
+    for (let index = 0; index < 20000; index++) {
+        var formattedIndex = String(index).padStart(5, '0');
+        var matricula = `'211${formattedIndex}'`;
+        var apellido1 = `'${apellidosFranceses[Math.floor(Math.random() * apellidosFranceses.length)]}'`;
+        var apellido2 = `'${apellidosJaponeses[Math.floor(Math.random() * apellidosJaponeses.length)]}'`;
+        var nombre1 = `'${nombresMexicanos[Math.floor(Math.random() * nombresMexicanos.length)]}'`;
+        var correo = `'A${formattedIndex}@uthermosillo.com.mx'`;
+        
+        // Concatenar los valores en un solo string
+        var valores = `(${matricula}, ${apellido1}, ${apellido2}, ${nombre1}, ${correo})`;
+        valoresSQL.push(valores);
+    }
+
+    // Generar la salida SQL en formato HTML
+    var salida = `
+        CREATE DATABASE IF NOT EXIST sistema_escolar; 
+        USE sistema_escolar;
+        CREATE TABLE IF NOT EXIST alumnos(matricula int UNIQUE, apellido1 VARCHAR(255) NOT NULL, apellido2 VARCHAR(255), nombres VARCHAR(255) NOT NULL, correo VARCHAR(255) NOT NULL UNIQUE);
+        INSERT INTO alumnos(matricula, apellido1, apellido2, nombres, correo) VALUES<br>
+        ${valoresSQL.join(",<br>")};
+    `;
+
+    document.getElementById("resultado").innerHTML = salida;
+}
+
+
+</script>
+
+<body>
+    <input type="button" value="Generar" onclick="generar()">   
+    <input type="button" value="Guardar SQL" onclick="guardar()">   
+    <p id="resultado"></p>
+
+
+   
+</body>
+</html>
